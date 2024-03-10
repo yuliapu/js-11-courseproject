@@ -4,9 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CW</title>
-
-    <script src="./scriptTab1.js"></script>
 </head>
-<body>
+<body>    
+    <label for="startDate">Start date:</label>
+    <input type="date" id="startDate">
+    <label for="endDate">End date:</label>
+    <input type="date" id="endDate">
+    
+    <button id="preset7days">7 days</button>
+    <button id="preset30days">30 days</button>
+    
+    <input type="radio" id="allRadio" name="week" value="All" checked="checked">
+    <label for="allRadio">All</label><br>
+    <input type="radio" id="weekdaysRadio" name="week" value="Weekdays">
+    <label for="weekdaysRadio">Weekdays</label><br>
+    <input type="radio" id="weekendsRadio" name="week" value="Weekends">
+    <label for="weekendsRadio">Weekends</label>
+
+    <script src="./js/script.js"></script>
 </body>
 </html>
