@@ -22,38 +22,22 @@ function getDifferenceInMilliseconds(startDate, endDate){
 }
 
 function getDifference(startDate, endDate, unit){
-    endDate = endDate.setDate(endDate.getDate() + 1);
-    let timespanInMilliseconds = getDifferenceInMilliseconds(startDate, endDate);
+    let endDateIncluded = endDate.setDate(endDate.getDate() + 1);
+    let timespanInMilliseconds = getDifferenceInMilliseconds(startDate, endDateIncluded);
     return convertDuration(timespanInMilliseconds, unit);
 }
 
-function getWeekdaysCount(startDate, endDate){
-   let startDayOfWeek = startDate.getDay();
-   let endDayOfWeek = endDate.getDay();
-   let weekdaysCount = 0;
-   let daysFromStartDateToMonday = 0;
-   let daysFromEndDateToSunday = 0;
-   let totalDays = getDifference(startDate, endDate, "days");
-
-   if (startDayOfWeek !== 1){
-    daysFromStartDateToMonday = 7 - startDayOfWeek + 1;
-    if (startDayOfWeek == 0){
-     weekdaysCount++;
-     daysFromStartDateToMonday = 1;
+function getWeekdaysCountInMilliseconds(startDate, endDate){
+    let weekdaysCount = 0;
+    const currDate = new Date(startDate);
+    while (currDate <= new Date(endDate)) {
+        if (!(currDate.getDay() === 6 || currDate.getDay() === 0)){
+            weekdaysCount++;
+        }
+       currDate.setDate(currDate.getDate() + 1);
     }
-    else {
-     weekdaysCount += 2;
-    }
-   }
-  
-   if (endDayOfWeek !== 0){
-    daysFromEndDateToSunday = endDayOfWeek;
-   }
 
-   totalDays = totalDays - daysFromStartDateToMonday - daysFromEndDateToSunday;
-   weekdaysCount += totalDays / 7 * 2;
-
-   return weekdaysCount;
+   return weekdaysCount * 24 * 60 * 60 * 1000;
 }
 
 
