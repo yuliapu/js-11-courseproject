@@ -30,8 +30,9 @@ function getDifference(startDate, endDate, unit){
 function getWeekdaysCountInMilliseconds(startDate, endDate){
     let weekdaysCount = 0;
     const currDate = new Date(startDate);
+    let isWeekend = (dayOfWeek) => (dayOfWeek === 6 || dayOfWeek === 0);
     while (currDate <= new Date(endDate)) {
-        if (!(currDate.getDay() === 6 || currDate.getDay() === 0)){
+        if (!isWeekend(currDate.getDay())){
             weekdaysCount++;
         }
        currDate.setDate(currDate.getDate() + 1);
