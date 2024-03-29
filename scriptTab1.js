@@ -1,5 +1,13 @@
 "use strict"
 
+// DOM variables
+let form = document.querySelector("form");
+let startDateInput = document.getElementsById("startDate");
+let endDateInput = document.getElementsById("endDate");
+
+const RESULTS_STORAGE_KEY = "results";
+
+// functions
 function addDays(inputDate, days){
     let date = new Date(inputDate);
     return date.setDate(date.getDate() + days);
@@ -16,15 +24,22 @@ function convertDuration(timespanInMilliseconds, unit){
 }
 
 function getDifferenceInMilliseconds(startDate, endDate){
-    startDate = new Date(startDate);
-    endDate = new Date(endDate);
+    let startDate = new Date(startDate);
+    let endDateIncluded = new Date(startDate).setDate(endDate.getDate() + 1);
     return Math.abs(endDate - startDate)
 }
 
-function getDifference(startDate, endDate, unit){
-    let endDateIncluded = endDate.setDate(endDate.getDate() + 1);
-    let timespanInMilliseconds = getDifferenceInMilliseconds(startDate, endDateIncluded);
-    return convertDuration(timespanInMilliseconds, unit);
+function getDifference(startDate, endDate, week, unit){
+    let resultDurationInMilliseconds = 0;
+    let totalDifference = getDifferenceInMilliseconds(startDate, endDate);
+
+    switch (week){
+        case "All": resultDuration = totalDifference; break;
+        case "Weekdays": resultDuration = totalDifference - getWeekdaysCountInMilliseconds(startDate, endDate); break;
+        case: "Weekends": resultDuration = getWeekdaysCountInMilliseconds(startDate, endDate); break;
+    }
+    
+    return convertDuration(resultDurationInMilliseconds, unit);
 }
 
 function getWeekdaysCountInMilliseconds(startDate, endDate){
@@ -41,7 +56,30 @@ function getWeekdaysCountInMilliseconds(startDate, endDate){
    return weekdaysCount * 24 * 60 * 60 * 1000;
 }
 
+function saveResultInStorage(startDate, endDate, difference, unit){
+    let newResult = {
+        start : startDate,
+        end : endDate,
+        difference : difference,
+        unit : unit
+    }
 
-console.log(getWeekdaysCount(new Date("March 10, 2024"), new Date("March 17, 2024")));
-console.log(getWeekdaysCount(new Date("March 1, 2024"), new Date("March 31, 2024")));
-console.log(getWeekdaysCount(new Date("May 1, 2024"), new Date("May 31, 2024")));
+    let storedResults = JSON.parse(localStorage.getItem(RESULTS_STORAGE_KEY)) || [];
+    storedResults.push(newResult);
+    
+    localStorage.setItem(RESULTS_STORAGE_KEY, JSON.stringify(storedResults));
+}
+
+const handleSubmit = (event) => {
+    event.preventDefault();
+  
+    const startDate = startDateInput.value;
+    const endDate = endDateInput.value;
+    const unit = document.querySelector('input[name="unit"]:checked').value;
+    const week = document.querySelector('input[name="week"]:checked').value;
+    let difference = getDifference(startDate, endDate, week, unit);
+  };
+  
+  
+// Event listeners
+bookForm.addEventListener("submit", handleSubmit);
