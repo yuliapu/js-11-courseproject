@@ -5,6 +5,7 @@ let form = document.querySelector("form");
 let presets = document.getElementById("presets");
 let startDateInput = document.getElementById("startDate");
 let endDateInput = document.getElementById("endDate");
+let resultsList = document.getElementById("results");
 
 const RESULTS_STORAGE_KEY = "results";
 
@@ -12,7 +13,6 @@ class DateInput{
     constructor(startDate, endDate, week, unit){
         this.startDate = new Date(startDate);
         this.endDate = new Date(endDate);
-        this.endDate.setDate(this.endDate.getDate() + 1);
         this.week = week;
         this.unit = unit;
     }
@@ -28,14 +28,14 @@ class DateInput{
     }
     
     #getDifferenceInMilliseconds(){
-        return Math.abs(this.endDate - this.startDate)
+        return Math.abs(this.endDate - this.startDate);
     }
     
     #getWeekdaysCountInMilliseconds(){
         let weekdaysCount = 0;
         const currDate = new Date(this.startDate);
         let isWeekend = (dayOfWeek) => (dayOfWeek === 6 || dayOfWeek === 0);
-        while (currDate <= this.endDate) {
+        while (currDate < this.endDate) {
             if (!isWeekend(currDate.getDay())){
                 weekdaysCount++;
             }
@@ -47,24 +47,35 @@ class DateInput{
 
     getDifference(){
         let resultDurationInMilliseconds = 0;
-        let totalDifference = this.#getDifferenceInMilliseconds();
+        if (this.startDate !== this.endDate){
+            let totalDifference = this.#getDifferenceInMilliseconds();
 
-        switch (this.week){
-            case "All": resultDurationInMilliseconds = totalDifference; break;
-            case "Weekdays": resultDurationInMilliseconds = totalDifference - this.#getWeekdaysCountInMilliseconds(); break;
-            case "Weekends": resultDurationInMilliseconds = this.#getWeekdaysCountInMilliseconds(); break;
+            switch (this.week){
+                case "All": resultDurationInMilliseconds = totalDifference; break;
+                case "Weekdays": resultDurationInMilliseconds = this.#getWeekdaysCountInMilliseconds(); break;
+                case "Weekends": resultDurationInMilliseconds = totalDifference - this.#getWeekdaysCountInMilliseconds(); break;
+            }
         }
-        
         return this.#convertDuration(resultDurationInMilliseconds);
+    }
+
+    getProperties(){
+        var options = { year: 'numeric', month: 'long', day: 'numeric' };
+
+        return {
+            startDate: this.startDate.toLocaleDateString("en-US", options),
+            endDate: this.endDate.toLocaleDateString("en-US", options),
+            duration: this.getDifference(),
+            unit: this.unit,
+            week: this.week
+        }
     }
 }
 
 // functions
 
 function init(){
-    // let today = new Date();
-    // startDateInput.valueAsDate = today;
-    // endDateInput.valueAsDate = addDays(today, 1);
+    
 }
 
 function addDays(inputDate, days){
@@ -73,6 +84,7 @@ function addDays(inputDate, days){
 }
 
 function saveResultInStorage(dateInput){
+    console.log(dateInput);
     let storedResults = JSON.parse(localStorage.getItem(RESULTS_STORAGE_KEY)) || [];
     storedResults.push(dateInput);
     
@@ -93,7 +105,28 @@ function validateDates(startDateInput, endDateInput){
 }
 
 function updateElementsState(isDisabled, ...elements){
-    [...elements].forEach(i => {console.log(1); i.disabled = isDisabled});
+    [...elements].forEach(i => i.disabled = isDisabled);
+}
+
+function getResultTextTemplate(result){
+    let includingWeekdaysText = result.week === "All" ? "all days of week" : result.week.toLowerCase();
+    let unit = Number(result.duration) > 1 ? result.unit : result.unit.substring(0, result.unit.length - 1);
+    return `It takes ${result.duration} ${unit.toLowerCase()} from ${result.startDate} to ${result.endDate}`
+        +` (including ${includingWeekdaysText})`;
+}
+
+function prependResultsList(result){
+    const li = document.createElement("li");
+    li.textContent = getResultTextTemplate(result);
+    resultsList.prepend(li);
+
+    if (resultsList.children.length > 10){
+        removeLastItemFromList(...resultsList.children);
+    }
+}
+
+function removeLastItemFromList(...items){
+    [...items][resultsList.children.length - 1].remove();
 }
 
 const handleSubmit = (event) => {
@@ -106,13 +139,16 @@ const handleSubmit = (event) => {
 
     if (validateDates(startDate, endDate)){
         let dateInput = new DateInput(startDate, endDate, week, unit)
-        let difference = dateInput.getDifference();
-        saveResultInStorage(dateInput);
+        let result = dateInput.getProperties();
+
+        prependResultsList(result);
+        saveResultInStorage(result);
     }
     else {
         alert("Please provide valid start and end dates.");
         startDateInput.valueAsDate = new Date();
-        endDateInput.valueAsDate = new Date();
+        endDateInput.valueAsDate = new Date();     
+        updateElementsState(false, endDateInput, ...presets.children);
     }
   };
   
