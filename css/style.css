@@ -35,7 +35,10 @@ input[type="radio"] {
 
 #results {
     list-style: none;
-    padding: 0;
+}
+
+li {
+    margin: 8px;
 }
 
 #presets button:hover {
@@ -50,7 +53,7 @@ section {
 #presets,
 #week,
 #unit {
-margin-bottom: 20px;
+    margin-bottom: 20px;
 }
 
 #presets button {

@@ -6,6 +6,8 @@ let presets = document.getElementById("presets");
 let startDateInput = document.getElementById("startDate");
 let endDateInput = document.getElementById("endDate");
 let resultsList = document.getElementById("results");
+let unitRadio = document.querySelectorAll('input[name="unit"]');
+let weekRadio = document.querySelectorAll('input[name="week"]');
 
 const RESULTS_STORAGE_KEY = "results";
 
@@ -31,12 +33,13 @@ class DateInput{
         return Math.abs(this.endDate - this.startDate);
     }
     
+    #isWeekend = (dayOfWeek) => (dayOfWeek === 6 || dayOfWeek === 0);
+
     #getWeekdaysCountInMilliseconds(){
         let weekdaysCount = 0;
         const currDate = new Date(this.startDate);
-        let isWeekend = (dayOfWeek) => (dayOfWeek === 6 || dayOfWeek === 0);
         while (currDate < this.endDate) {
-            if (!isWeekend(currDate.getDay())){
+            if (!this.#isWeekend(currDate.getDay())){
                 weekdaysCount++;
             }
            currDate.setDate(currDate.getDate() + 1);
@@ -60,7 +63,7 @@ class DateInput{
     }
 
     getProperties(){
-        var options = { year: 'numeric', month: 'long', day: 'numeric' };
+        let options = { year: 'numeric', month: 'long', day: 'numeric' };
 
         return {
             startDate: this.startDate.toLocaleDateString("en-US", options),
@@ -100,7 +103,7 @@ function validateDates(startDateInput, endDateInput){
         return false;
     }
     else if (startDate > endDate){
-        return false
+        return false;
     }
     return true;
 }
@@ -112,8 +115,7 @@ function updateElementsState(isDisabled, ...elements){
 function getResultTextTemplate(result){
     let includingWeekdaysText = result.week === "All" ? "all days of week" : result.week.toLowerCase();
     let unit = Number(result.duration) > 1 ? result.unit : result.unit.substring(0, result.unit.length - 1);
-    return `It takes ${result.duration} ${unit.toLowerCase()} from ${result.startDate} to ${result.endDate}`
-        +` (including ${includingWeekdaysText})`;
+    return `It takes ${result.duration} ${unit.toLowerCase()} from ${result.startDate} to ${result.endDate} (including ${includingWeekdaysText})`;
 }
 
 function prependResultsList(result){
@@ -122,12 +124,16 @@ function prependResultsList(result){
     resultsList.prepend(li);
 
     if (resultsList.children.length > 10){
-        removeLastItemFromList(...resultsList.children);
+        removeLastItemFromList(resultsList.children);
     }
 }
 
-function removeLastItemFromList(...items){
-    [...items][resultsList.children.length - 1].remove();
+function removeLastItemFromList(items){
+    items[resultsList.children.length - 1].remove();
+}
+
+function getCheckedValue(radio){
+    return [...radio].find(i => i.checked).value
 }
 
 const handleSubmit = (event) => {
@@ -135,11 +141,8 @@ const handleSubmit = (event) => {
   
     const startDate = startDateInput.value;
     const endDate = endDateInput.value;
-    const unit = document.querySelector('input[name="unit"]:checked').value;
-    const week = document.querySelector('input[name="week"]:checked').value;
-
     if (validateDates(startDate, endDate)){
-        let dateInput = new DateInput(startDate, endDate, week, unit)
+        let dateInput = new DateInput(startDate, endDate, getCheckedValue(weekRadio), getCheckedValue(unitRadio))
         let result = dateInput.getProperties();
 
         prependResultsList(result);
@@ -148,21 +151,23 @@ const handleSubmit = (event) => {
     else {
         alert("Please provide valid start and end dates.");
         startDateInput.valueAsDate = new Date();
-        endDateInput.valueAsDate = new Date();     
+        endDateInput.valueAsDate = new Date();  
+        endDateInput.min = startDateInput.value;
         updateElementsState(false, endDateInput, ...presets.children);
     }
   };
   
 const handleStartDateChange = (event) => {
     updateElementsState(isNaN(new Date(startDateInput.value)), endDateInput, ...presets.children);
-    
-    if (!isNaN(new Date(endDateInput.value)) && !validateDates(startDateInput.value, endDateInput.value)){
+    if (!isNaN(new Date(endDateInput.value)) && !validateDates(startDateInput.value, endDateInput.value) ){
         endDateInput.value = startDateInput.value;
     }
+
+    endDateInput.min = startDateInput.value;
 };
 
 const handleEndDateChange = (event) => {
-    if(!validateDates(startDateInput.value, endDateInput.value)){
+    if(isNaN(new Date(endDateInput.value))){
         alert("Please provide valid end date.");
         endDateInput.value = startDateInput.value;
     }
