@@ -26,24 +26,11 @@ input[type="date"] {
     border: 1px solid #ccc;
     border-radius: 3px;
     margin-bottom: 15px;
+    font-family: Arial, sans-serif;
 }
 
 input[type="radio"] {
     margin-right: 5px;
-}
-
-button[type="submit"] {
-    background-color: #007bff;
-    color: #ffffff;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 3px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-button[type="submit"]:hover {
-    background-color: #0056b3;
 }
 
 #results {
