@@ -2,8 +2,7 @@
 
 // DOM variables
 let form = document.querySelector("form");
-let presentWeek = document.getElementById("preset-week");
-let presetMonth = document.getElementById("preset-month");
+let presets = document.getElementById("presets");
 let startDateInput = document.getElementById("startDate");
 let endDateInput = document.getElementById("endDate");
 
@@ -61,9 +60,16 @@ class DateInput{
 }
 
 // functions
+
+function init(){
+    // let today = new Date();
+    // startDateInput.valueAsDate = today;
+    // endDateInput.valueAsDate = addDays(today, 1);
+}
+
 function addDays(inputDate, days){
     let date = new Date(inputDate);
-    return date.setDate(date.getDate() + days);
+    return new Date(date.setDate(date.getDate() + days));
 }
 
 function saveResultInStorage(dateInput){
@@ -86,6 +92,10 @@ function validateDates(startDateInput, endDateInput){
     return true;
 }
 
+function updateElementsState(isDisabled, ...elements){
+    [...elements].forEach(i => {console.log(1); i.disabled = isDisabled});
+}
+
 const handleSubmit = (event) => {
     event.preventDefault();
   
@@ -98,14 +108,39 @@ const handleSubmit = (event) => {
         let dateInput = new DateInput(startDate, endDate, week, unit)
         let difference = dateInput.getDifference();
         saveResultInStorage(dateInput);
-
-        console.log(difference);
     }
-    else{
-        console.log("Invalid input.");
+    else {
+        alert("Please provide valid start and end dates.");
+        startDateInput.valueAsDate = new Date();
+        endDateInput.valueAsDate = new Date();
     }
   };
   
+const handleStartDateChange = (event) => {
+    updateElementsState(isNaN(new Date(startDateInput.value)), endDateInput, ...presets.children);
+    
+    if (!isNaN(new Date(endDateInput.value)) && !validateDates(startDateInput.value, endDateInput.value)){
+        endDateInput.value = startDateInput.value;
+    }
+};
+
+const handleEndDateChange = (event) => {
+    if(!validateDates(startDateInput.value, endDateInput.value)){
+        alert("Please provide valid end date.");
+        endDateInput.value = startDateInput.value;
+    }
+};
+
+const handlePresets = (event) => {
+    endDateInput.valueAsDate = addDays(startDateInput.value, Number(event.target.dataset.value));
+};
+
   
 // Event listeners
 form.addEventListener("submit", handleSubmit);
+startDateInput.addEventListener("change", handleStartDateChange);
+endDateInput.addEventListener("change", handleEndDateChange);
+presets.addEventListener("click", handlePresets);
+
+  
+init();
