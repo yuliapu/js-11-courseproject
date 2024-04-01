@@ -75,7 +75,7 @@ class DateInput{
 // functions
 
 function init(){
-    
+    getResultsFromStorage().forEach(prependResultsList);
 }
 
 function addDays(inputDate, days){
@@ -84,12 +84,13 @@ function addDays(inputDate, days){
 }
 
 function saveResultInStorage(dateInput){
-    console.log(dateInput);
-    let storedResults = JSON.parse(localStorage.getItem(RESULTS_STORAGE_KEY)) || [];
+    let storedResults = getResultsFromStorage();
     storedResults.push(dateInput);
     
     localStorage.setItem(RESULTS_STORAGE_KEY, JSON.stringify(storedResults));
 }
+
+const getResultsFromStorage = () => JSON.parse(localStorage.getItem(RESULTS_STORAGE_KEY)) || [];
 
 function validateDates(startDateInput, endDateInput){
     let startDate = new Date(startDateInput);
