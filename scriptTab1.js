@@ -2,6 +2,8 @@
 
 // DOM variables
 let form = document.querySelector("form");
+let presentWeek = document.getElementById("preset-week");
+let presetMonth = document.getElementById("preset-month");
 let startDateInput = document.getElementById("startDate");
 let endDateInput = document.getElementById("endDate");
 
@@ -74,7 +76,7 @@ function saveResultInStorage(dateInput){
 function validateDates(startDateInput, endDateInput){
     let startDate = new Date(startDateInput);
     let endDate = new Date(endDateInput);
-    
+
     if (isNaN(startDate) || isNaN(endDate)){
         return false;
     }
