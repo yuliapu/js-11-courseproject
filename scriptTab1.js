@@ -129,7 +129,7 @@ function prependResultsList(result){
 }
 
 function removeLastItemFromList(items){
-    items[resultsList.children.length - 1].remove();
+    items[items.length - 1].remove();
 }
 
 function getCheckedValue(radio){
@@ -170,6 +170,9 @@ const handleEndDateChange = (event) => {
     if(isNaN(new Date(endDateInput.value))){
         alert("Please provide valid end date.");
         endDateInput.value = startDateInput.value;
+    }
+    else {
+        startDateInput.max = endDateInput.value;
     }
 };
 
