@@ -1,52 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CW</title>
-    <link rel="stylesheet" href="./css/style.css">
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>CW</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="./css/style.css">
+    </head>
 <body>
-    <form>
-        <label for="startDate">Start date:</label>
-        <input type="date" id="startDate">
-        <label for="endDate">End date:</label>
-        <input type="date" id="endDate">
-
-        <section id="presets">
-            <button id="preset-week" data-value="7">7 days</button>
-            <button id="preset-month" data-value="30">30 days</button>
-        </section>
-
-         <section id="week">
-            <input type="radio" id="allRadio" name="week" value="All" checked="checked">
-            <label for="allRadio">All</label><br>
-            <input type="radio" id="weekdaysRadio" name="week" value="Weekdays">
-            <label for="weekdaysRadio">Weekdays</label><br>
-            <input type="radio" id="weekendsRadio" name="week" value="Weekends">
-            <label for="weekendsRadio">Weekends</label>
-        </section>
-
-
-        <section id="unit">
-            <input type="radio" id="daysRadio" name="unit" value="Days" checked="checked">
-            <label for="daysRadio">Days</label><br>
-            <input type="radio" id="hoursRadio" name="unit" value="Hours">
-            <label for="hoursRadio">Hours</label><br>
-            <input type="radio" id="minutesRadio" name="unit" value="Minutes">
-            <label for="minutesRadio">Minutes</label><br>
-            <input type="radio" id="secondsRadio" name="unit" value="Seconds">
-            <label for="secondsRadio">Seconds</label>
-        </section>
-
-        <button type="submit">Get difference</button>
-    </form>    
-        
-    <div>
-        <ul id="results">
-            <li>test</li>
-        </ul>
+    <div class="tab">
+        <button class="tablinks" value="duration" id="defaultOpen">Duration</button>
+        <button class="tablinks" value="holidays">Holidays</button>
+      </div>
+        <div id="duration" class="tabcontent">
+          <h3>Duration between dates</h3>
+          <form>
+            <label for="startDate">Start date:</label>
+            <input type="date" id="startDate">
+            <label for="endDate">End date:</label>
+            <input type="date" id="endDate">
+    
+            <section id="presets">
+                <button id="preset-week" data-value="7">7 days</button>
+                <button id="preset-month" data-value="30">30 days</button>
+            </section>
+    
+            <section id="unit">
+                <input type="radio" id="daysRadio" name="unit" value="Days" checked="checked">
+                <label for="daysRadio">Days</label><br>
+                <input type="radio" id="hoursRadio" name="unit" value="Hours">
+                <label for="hoursRadio">Hours</label><br>
+                <input type="radio" id="minutesRadio" name="unit" value="Minutes">
+                <label for="minutesRadio">Minutes</label><br>
+                <input type="radio" id="secondsRadio" name="unit" value="Seconds">
+                <label for="secondsRadio">Seconds</label>
+            </section>
+    
+    
+            <section id="week">
+                <input type="radio" id="allRadio" name="week" value="All" checked="checked">
+                <label for="allRadio">All</label><br>
+                <input type="radio" id="weekdaysRadio" name="week" value="Weekdays">
+                <label for="weekdaysRadio">Weekdays</label><br>
+                <input type="radio" id="weekendsRadio" name="week" value="Weekends">
+                <label for="weekendsRadio">Weekends</label>
+            </section>
+            
+            <button type="submit">Get difference</button>
+        </form>    
+            
+        <div>
+            <ul id="results">
+            </ul>
+            </div>
         </div>
-    <script src="./scriptTab1.js"></script>
+    
+        <div id="holidays" class="tabcontent">
+          <h3>Holidays</h3>
+          
+          <div class="container">
+            <select id="country">
+                <option value="default" id="default" selected disabled>Please select country</option>
+            </select>
+            <select id="year" disabled>                
+                <option value="default" id="default" disabled>Please select year</option>
+            </select>
+            
+            <table>
+                <tr>
+                    <td>Date <i class="fa fa-sort"></i></td>
+                    <td>Holiday <i class="fa fa-sort"></i></td>
+                </tr>
+                <tr>
+                    <td>Data 1</td>
+                    <td>Data 2</td>
+                </tr>
+            </table>
+        </div>
+        </div>
+      <script src="./scriptTab1.js"></script>
+      <script src="./scriptTab2.js"></script>
 </body>
 </html>

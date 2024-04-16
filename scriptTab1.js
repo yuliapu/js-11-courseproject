@@ -9,6 +9,9 @@ let resultsList = document.getElementById("results");
 let unitRadio = document.querySelectorAll('input[name="unit"]');
 let weekRadio = document.querySelectorAll('input[name="week"]');
 
+let tablinks = document.querySelector(".tab");
+let tabcontent = document.getElementsByClassName("tabcontent");
+
 const RESULTS_STORAGE_KEY = "results";
 
 class DateInput{
@@ -75,7 +78,18 @@ class DateInput{
     }
 }
 
-// functions
+function openTab(evt) {
+    for (let i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+    }
+  
+    for (let i = 0; i < tablinks.length; i++) {
+      tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+  
+    document.getElementById(evt.target.value).style.display = "block";
+    evt.currentTarget.className += " active";
+  }
 
 function init(){
     getResultsFromStorage().forEach(prependResultsList);
@@ -182,10 +196,12 @@ const handlePresets = (event) => {
 
   
 // Event listeners
+tablinks.addEventListener("click", openTab);
+
 form.addEventListener("submit", handleSubmit);
 startDateInput.addEventListener("change", handleStartDateChange);
 endDateInput.addEventListener("change", handleEndDateChange);
 presets.addEventListener("click", handlePresets);
 
-  
 init();
+document.getElementById("defaultOpen").click(); 
