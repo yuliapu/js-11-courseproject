@@ -79,7 +79,9 @@ const populateHolidays = async (event) =>{
     const holidaysInput = {
         country: countrySelect.value,
         year: yearSelect.value,
-        data: holidays.map((holiday) => ({ date: holiday.date.datetime, name: holiday.name })),
+        data: holidays.map((holiday) => ({ 
+            date: new Date(holiday.date.datetime.year, holiday.date.datetime.month, holiday.date.datetime.day), 
+            name: holiday.name })),
       };
       
     buildHolidaysTable(holidaysInput.data);
@@ -89,11 +91,8 @@ const populateHolidays = async (event) =>{
 function buildHolidaysTable(holidays){
     holidaysTable.innerHTML = "";
     holidays.forEach(holiday => {
-        let responseDate = holiday.date;
-        let date = new Date(responseDate.year, responseDate.month, responseDate.day);       
-
         const row = document.createElement("tr");
-        row.innerHTML = `<td>${date.toLocaleDateString()}</td><td>${holiday.name}</td>`;
+        row.innerHTML = `<td>${new Date(holiday.date).toLocaleDateString()}</td><td>${holiday.name}</td>`;
         holidaysTable.append(row);
     });
 }
@@ -114,16 +113,31 @@ function handleYearSelection(event){
     }
 }
 
+function sortHolidays(direction){
+    let sortedHolidays = getTableFromStorage().data;
+    if (direction === "asc") {
+        sortedHolidays.sort(function(a,b){
+            return new Date(b.date) - new Date(a.date);
+          });
+    }
+    else{
+        sortedHolidays.sort(function(a,b){
+            return new Date(a.date) - new Date(b.date);
+          });
+    }
+    buildHolidaysTable(sortedHolidays);
+}
+
 function handleSort(event){
     if(event.target.className.includes("fa-sort"))
     {
         let sortIcon = event.target;
         if (sortIcon.className.includes("asc")){
-            sortHolidays("asc");
+            sortHolidays("desc");
             sortIcon.className = sortIcon.className.replace("asc", "desc");
         }
         else{
-            sortHolidays("desc");
+            sortHolidays("asc");
             sortIcon.className = sortIcon.className.replace("desc", "asc");
         }
     }
@@ -139,7 +153,6 @@ function setOptionByValue(select, value) {
 function prepopulateWithStoredData(){    
     let storedHolidays = getTableFromStorage();
     if (storedHolidays){
-        console.log("here")
         setOptionByValue(yearSelect, storedHolidays.year);
         setOptionByValue(countrySelect, storedHolidays.country);
         buildHolidaysTable(storedHolidays.data);
