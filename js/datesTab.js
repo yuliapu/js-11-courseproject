@@ -78,7 +78,7 @@ class DateInput{
     }
 }
 
-function openTab(evt) {
+function handleTabLinkClick(evt) {
     for (let i = 0; i < tabcontent.length; i++) {
       tabcontent[i].style.display = "none";
     }
@@ -92,6 +92,7 @@ function openTab(evt) {
   }
 
 function init(){
+    document.querySelector(".defaultopen").style.display = "block";
     getResultsFromStorage().forEach(prependResultsList);
 }
 
@@ -196,12 +197,10 @@ const handlePresets = (event) => {
 
   
 // Event listeners
-tablinks.addEventListener("click", openTab);
-
+tablinks.addEventListener("click", handleTabLinkClick);
 form.addEventListener("submit", handleSubmit);
 startDateInput.addEventListener("change", handleStartDateChange);
 endDateInput.addEventListener("change", handleEndDateChange);
 presets.addEventListener("click", handlePresets);
 
 init();
-document.getElementById("defaultOpen").click(); 

@@ -54,9 +54,11 @@ function handleCountrySelection(event){
     yearSelect.disabled = countrySelect.value === "default";
 }
 
-
+function init(){
+    populateCountries();
+    populateYears(2001, 2049);
+}
 
 countrySelect.addEventListener("change", handleCountrySelection);
 
-populateCountries();
-populateYears(2001, 2049);
+init();
