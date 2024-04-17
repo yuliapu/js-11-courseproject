@@ -15,7 +15,7 @@ function init(){
         hideAllTabContents();
         setAllTabLinksInactive();
         showTab(savedTab);
-        let tabLink = document.getElementById(`${savedTab}Link`);
+        let tabLink = document.getElementById("savedTab");
         tabLink.className += " active";
     }
 
@@ -28,20 +28,22 @@ function hideAllTabContents(){
 }
 
 function setAllTabLinksInactive(){
-    for (let i = 0; i < tablinks.length; i++) {
-        tablinks[i].className = tablinks[i].className.replace(" active", "");
+    for (let i = 0; i < tablinks.children.length; i++) {
+        tablinks.children[i].className = tablinks.children[i].className.replace(" active", "");
       }  
 }
 
 function showTab(id){
-    document.getElementById(id).style.display = "block";
+    document.querySelector(`.${id}`).style.display = "block";
 }
 
 function handleTabLinkClick(evt) {  
     hideAllTabContents();
     setAllTabLinksInactive();
     showTab(evt.target.id);
-    evt.currentTarget.className += " active";
+    console.log(evt.currentTarget)
+    evt.target.className += " active";
+    saveSelectedTabInStorage(evt.target.id)
   }
 
 
