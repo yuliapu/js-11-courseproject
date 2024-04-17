@@ -9,9 +9,6 @@ let resultsList = document.getElementById("results");
 let unitRadio = document.querySelectorAll('input[name="unit"]');
 let weekRadio = document.querySelectorAll('input[name="week"]');
 
-let tablinks = document.querySelector(".tab");
-let tabcontent = document.getElementsByClassName("tabcontent");
-
 const RESULTS_STORAGE_KEY = "results";
 
 class DateInput{
@@ -77,19 +74,6 @@ class DateInput{
         }
     }
 }
-
-function handleTabLinkClick(evt) {
-    for (let i = 0; i < tabcontent.length; i++) {
-      tabcontent[i].style.display = "none";
-    }
-  
-    for (let i = 0; i < tablinks.length; i++) {
-      tablinks[i].className = tablinks[i].className.replace(" active", "");
-    }
-  
-    document.getElementById(evt.target.value).style.display = "block";
-    evt.currentTarget.className += " active";
-  }
 
 function init(){
     document.querySelector(".defaultopen").style.display = "block";
