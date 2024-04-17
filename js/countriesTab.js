@@ -9,8 +9,10 @@ const API_KEY = "fxcnzLXzTU4yKyPFdzcGK85cIxlJtJzH";
 const HOLIDAYS_STORAGE_KEY = "holidays";
 
 function saveTableInStorage(holidaysInput){
-    localStorage.setItem(HOLIDAYS_STORAGE_KEY, JSON.stringify(storedResults));
+    localStorage.setItem(HOLIDAYS_STORAGE_KEY, JSON.stringify(holidaysInput));
 }
+
+const getTableFromStorage = () => JSON.parse(localStorage.getItem(HOLIDAYS_STORAGE_KEY));
 
  const getCountries = async () => {
     const response = await fetch(
@@ -54,6 +56,9 @@ const populateCountries = async (event) =>{
         option.value = country["iso-3166"];
         countrySelect.append(option);
     });
+
+
+    setOptionByValue(countrySelect, "default");
 }
 
 function populateYears(start, stop){
@@ -76,8 +81,8 @@ const populateHolidays = async (event) =>{
         year: yearSelect.value,
         data: holidays.map((holiday) => ({ date: holiday.date.datetime, name: holiday.name })),
       };
-
-    buildHolidaysTable(holidaysInput);
+      
+    buildHolidaysTable(holidaysInput.data);
     saveTableInStorage(holidaysInput);
 }
 
@@ -110,10 +115,10 @@ function handleYearSelection(event){
 }
 
 function handleSort(event){
-    if(event.target.classList.includes("fa-sort"))
+    if(event.target.className.includes("fa-sort"))
     {
         let sortIcon = event.target;
-        if (sortIcon.classList.includes("asc")){
+        if (sortIcon.className.includes("asc")){
             sortHolidays("asc");
             sortIcon.className = sortIcon.className.replace("asc", "desc");
         }
@@ -124,9 +129,27 @@ function handleSort(event){
     }
 }
 
-function init(){
-    populateCountries();
+function setOptionByValue(select, value) {
+    for (var i = 0; i < select.options.length; ++i) {
+        if (select.options[i].value === value)
+        select.options[i].selected = true;
+    }
+}
+
+function prepopulateWithStoredData(){    
+    let storedHolidays = getTableFromStorage();
+    if (storedHolidays){
+        console.log("here")
+        setOptionByValue(yearSelect, storedHolidays.year);
+        setOptionByValue(countrySelect, storedHolidays.country);
+        buildHolidaysTable(storedHolidays.data);
+    }
+
+}
+const init = async () =>{
+    await populateCountries();
     populateYears(2001, 2049);
+    prepopulateWithStoredData();
 }
 
 countrySelect.addEventListener("change", handleCountrySelection);
