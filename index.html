@@ -8,11 +8,16 @@
         <link rel="stylesheet" href="./css/style.css">
     </head>
 <body>
+
+    
     <div class="tab">
         <button class="tablinks active" value="duration">Duration</button>
         <button class="tablinks" value="holidays">Holidays</button>
       </div>
-        <div id="duration" class="tabcontent defaultopen">
+     
+     
+     
+      <div id="duration" class="tabcontent defaultopen">
           <h3>Duration between dates</h3>
           <form>
             <label for="startDate">Start date:</label>
@@ -55,6 +60,8 @@
             </div>
         </div>
     
+
+
         <div id="holidays" class="tabcontent">
           <h3>Holidays</h3>
           
@@ -67,10 +74,12 @@
             </select>
             
             <table id="holidays-by-country">
+                <thead>
                 <tr>
-                    <td>Date <i class="fa fa-sort"></i></td>
-                    <td>Holiday <i class="fa fa-sort"></i></td>
+                    <td id="date-header">Date <i class="fa fa-sort desc"></i></td>
+                    <td>Holiday</td>
                 </tr>
+                </thead>
                 <tbody>
                 </tbody>
             </table>

@@ -135,3 +135,37 @@ div {
     border: 1px solid #ccc;
     border-top: none;
   }
+  h3 {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.container {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+select {
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 10px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table td, table th {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+}
+
+.fa-sort {
+    margin-left: 5px;
+}

@@ -3,8 +3,14 @@
 const countrySelect = document.getElementById("country");
 const yearSelect = document.getElementById("year");
 const holidaysTable = document.querySelector("#holidays-by-country tbody");
+const dateHeaderCell = document.getElementById("date-header");
 
 const API_KEY = "fxcnzLXzTU4yKyPFdzcGK85cIxlJtJzH";
+const HOLIDAYS_STORAGE_KEY = "holidays";
+
+function saveTableInStorage(holidaysInput){
+    localStorage.setItem(HOLIDAYS_STORAGE_KEY, JSON.stringify(storedResults));
+}
 
  const getCountries = async () => {
     const response = await fetch(
@@ -65,9 +71,20 @@ function populateYears(start, stop){
 
 const populateHolidays = async (event) =>{
     const holidays = await getHolidays(countrySelect.value, yearSelect.value);
+    const holidaysInput = {
+        country: countrySelect.value,
+        year: yearSelect.value,
+        data: holidays.map((holiday) => ({ date: holiday.date.datetime, name: holiday.name })),
+      };
+
+    buildHolidaysTable(holidaysInput);
+    saveTableInStorage(holidaysInput);
+}
+
+function buildHolidaysTable(holidays){
     holidaysTable.innerHTML = "";
     holidays.forEach(holiday => {
-        let responseDate = holiday.date.datetime;
+        let responseDate = holiday.date;
         let date = new Date(responseDate.year, responseDate.month, responseDate.day);       
 
         const row = document.createElement("tr");
@@ -92,6 +109,21 @@ function handleYearSelection(event){
     }
 }
 
+function handleSort(event){
+    if(event.target.classList.includes("fa-sort"))
+    {
+        let sortIcon = event.target;
+        if (sortIcon.classList.includes("asc")){
+            sortHolidays("asc");
+            sortIcon.className = sortIcon.className.replace("asc", "desc");
+        }
+        else{
+            sortHolidays("desc");
+            sortIcon.className = sortIcon.className.replace("desc", "asc");
+        }
+    }
+}
+
 function init(){
     populateCountries();
     populateYears(2001, 2049);
@@ -99,5 +131,6 @@ function init(){
 
 countrySelect.addEventListener("change", handleCountrySelection);
 yearSelect.addEventListener("change", handleYearSelection);
+dateHeaderCell.addEventListener("click", handleSort);
 
 init();
