@@ -48,7 +48,7 @@ function getYears(start, stop) {
 }
 
 const populateCountries = async (event) =>{
-    const data = await getCountries();
+  try{  const data = await getCountries();
     let countries = data.filter(i => i.country_name !== "Russia");
     countries.forEach(country => {
         const option = document.createElement("option");
@@ -56,7 +56,9 @@ const populateCountries = async (event) =>{
         option.value = country["iso-3166"];
         countrySelect.append(option);
     });
-
+} catch (error) {
+    alert(error.message);
+  } 
 
     setOptionByValue(countrySelect, "default");
 }
@@ -75,6 +77,7 @@ function populateYears(start, stop){
 }
 
 const populateHolidays = async (event) =>{
+    try{
     const holidays = await getHolidays(countrySelect.value, yearSelect.value);
     const holidaysInput = {
         country: countrySelect.value,
@@ -86,6 +89,9 @@ const populateHolidays = async (event) =>{
       
     buildHolidaysTable(holidaysInput.data);
     saveTableInStorage(holidaysInput);
+} catch (error) {
+    alert(error.message);
+  } 
 }
 
 function buildHolidaysTable(holidays){

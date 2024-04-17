@@ -181,7 +181,6 @@ const handlePresets = (event) => {
 
   
 // Event listeners
-tablinks.addEventListener("click", handleTabLinkClick);
 form.addEventListener("submit", handleSubmit);
 startDateInput.addEventListener("change", handleStartDateChange);
 endDateInput.addEventListener("change", handleEndDateChange);
