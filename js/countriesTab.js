@@ -5,7 +5,7 @@ const yearSelect = document.getElementById("year");
 const holidaysTable = document.querySelector("#holidays-by-country tbody");
 const dateHeaderCell = document.getElementById("date-header");
 
-const API_KEY = "fxcnzLXzTU4yKyPFdzcGK85cIxlJtJzH";
+const API_KEY = "jMwyC4PwcWIULQ2bb7W8mDqsgE9Qtmi9";
 const HOLIDAYS_STORAGE_KEY = "holidays";
 
 function saveTableInStorage(holidaysInput){
