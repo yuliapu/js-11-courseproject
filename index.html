@@ -8,11 +8,16 @@
         <link rel="stylesheet" href="./css/style.css">
     </head>
 <body>
+
+    
     <div class="tab">
-        <button class="tablinks active" value="duration">Duration</button>
-        <button class="tablinks" value="holidays">Holidays</button>
+        <button class="tablinks active" id="duration">Duration</button>
+        <button class="tablinks" id="holidays">Holidays</button>
       </div>
-        <div id="duration" class="tabcontent defaultopen">
+     
+     
+     
+      <div class="tabcontent defaultopen duration">
           <h3>Duration between dates</h3>
           <form>
             <label for="startDate">Start date:</label>
@@ -55,30 +60,33 @@
             </div>
         </div>
     
-        <div id="holidays" class="tabcontent">
+
+
+        <div class="tabcontent holidays">
           <h3>Holidays</h3>
           
           <div class="container">
             <select id="country">
-                <option value="default" id="default" selected disabled>Please select country</option>
+                <option value="default" id="default" disabled>Please select country</option>
             </select>
             <select id="year" disabled>                
                 <option value="default" id="default" disabled>Please select year</option>
             </select>
             
-            <table>
+            <table id="holidays-by-country">
+                <thead>
                 <tr>
-                    <td>Date <i class="fa fa-sort"></i></td>
-                    <td>Holiday <i class="fa fa-sort"></i></td>
+                    <td id="date-header">Date <i class="fa fa-sort desc"></i></td>
+                    <td>Holiday</td>
                 </tr>
-                <tr>
-                    <td>Data 1</td>
-                    <td>Data 2</td>
-                </tr>
+                </thead>
+                <tbody>
+                </tbody>
             </table>
         </div>
         </div>
         <script src="./js/datesTab.js" type="module"></script>
         <script src="./js/countriesTab.js" type="module"></script>
+        <script src="./js/index.js" type="module"></script>
 </body>
 </html>
