@@ -15,7 +15,7 @@ function init(){
         hideAllTabContents();
         setAllTabLinksInactive();
         showTab(savedTab);
-        let tabLink = document.getElementById("savedTab");
+        let tabLink = document.getElementById(savedTab);
         tabLink.className += " active";
     }
 
