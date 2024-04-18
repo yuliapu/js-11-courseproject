@@ -159,6 +159,7 @@ function setOptionByValue(select, value) {
 function prepopulateWithStoredData(){    
     let storedHolidays = getTableFromStorage();
     if (storedHolidays){
+        yearSelect.disabled = false;
         setOptionByValue(yearSelect, storedHolidays.year);
         setOptionByValue(countrySelect, storedHolidays.country);
         buildHolidaysTable(storedHolidays.data);
