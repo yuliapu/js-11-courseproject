@@ -83,7 +83,7 @@ const populateHolidays = async (event) =>{
         country: countrySelect.value,
         year: yearSelect.value,
         data: holidays.map((holiday) => ({ 
-            date: new Date(holiday.date.datetime.year, holiday.date.datetime.month, holiday.date.datetime.day), 
+            date: new Date(holiday.date.datetime.year, holiday.date.datetime.month - 1, holiday.date.datetime.day), 
             name: holiday.name })),
       };
       
