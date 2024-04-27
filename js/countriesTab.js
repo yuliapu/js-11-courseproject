@@ -1,44 +1,12 @@
-"use strict"
+import { getCountries, getHolidays } from "./api.js";
+import { saveTableInStorage, getTableFromStorage } from "./storage.js";
 
 const countrySelect = document.getElementById("country");
 const yearSelect = document.getElementById("year");
 const holidaysTable = document.querySelector("#holidays-by-country tbody");
 const dateHeaderCell = document.getElementById("date-header");
 
-const API_KEY = "jMwyC4PwcWIULQ2bb7W8mDqsgE9Qtmi9";
 const HOLIDAYS_STORAGE_KEY = "holidays";
-
-function saveTableInStorage(holidaysInput){
-    localStorage.setItem(HOLIDAYS_STORAGE_KEY, JSON.stringify(holidaysInput));
-}
-
-const getTableFromStorage = () => JSON.parse(localStorage.getItem(HOLIDAYS_STORAGE_KEY));
-
- const getCountries = async () => {
-    const response = await fetch(
-      `https://calendarific.com/api/v2/countries?api_key=${API_KEY}`
-    );
-    const data = await response.json();
-  
-    if (!response.ok) {  
-      throw new Error(`Something went wrong! Details: ${data.message}`);
-    }
-  
-    return data.response.countries;
-  };
-
-  const getHolidays = async (countryCode, year) => {
-    const response = await fetch(
-      `https://calendarific.com/api/v2/holidays?api_key=${API_KEY}&country=${countryCode}&year=${year}`
-    );
-    const data = await response.json();
-  
-    if (!response.ok) {  
-      throw new Error(`Something went wrong! Details: ${data.message}`);
-    }
-  
-    return data.response.holidays;
-  };
 
 function getYears(start, stop) {
     return Array.from(
@@ -88,7 +56,7 @@ const populateHolidays = async (event) =>{
       };
       
     buildHolidaysTable(holidaysInput.data);
-    saveTableInStorage(holidaysInput);
+    saveTableInStorage(HOLIDAYS_STORAGE_KEY, holidaysInput);
 } catch (error) {
     alert(error.message);
   } 
@@ -120,7 +88,7 @@ function handleYearSelection(event){
 }
 
 function sortHolidays(direction){
-    let sortedHolidays = getTableFromStorage().data;
+    let sortedHolidays = getTableFromStorage(HOLIDAYS_STORAGE_KEY).data;
     if (direction === "asc") {
         sortedHolidays.sort(function(a,b){
             return new Date(b.date) - new Date(a.date);
@@ -157,7 +125,7 @@ function setOptionByValue(select, value) {
 }
 
 function prepopulateWithStoredData(){    
-    let storedHolidays = getTableFromStorage();
+    let storedHolidays = getTableFromStorage(HOLIDAYS_STORAGE_KEY);
     if (storedHolidays){
         yearSelect.disabled = false;
         setOptionByValue(yearSelect, storedHolidays.year);
@@ -166,7 +134,7 @@ function prepopulateWithStoredData(){
     }
 
 }
-const init = async () =>{
+export const initCountriesTab = async () =>{
     await populateCountries();
     populateYears(2001, 2049);
     prepopulateWithStoredData();
@@ -175,5 +143,3 @@ const init = async () =>{
 countrySelect.addEventListener("change", handleCountrySelection);
 yearSelect.addEventListener("change", handleYearSelection);
 dateHeaderCell.addEventListener("click", handleSort);
-
-init();

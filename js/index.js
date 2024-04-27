@@ -1,13 +1,17 @@
-"use strict"
+import { initDatesTab } from "./datesTab.js";
+import { initCountriesTab } from "./countriesTab.js";
+import { saveStringInStorage, getStringFromStorage } from "./storage.js";
 
 const TAB_STORAGE_KEY = "tab";
 
-let tablinks = document.querySelector(".tab");
-let tabcontent = document.getElementsByClassName("tabcontent");
-let defaultOpen = document.querySelector(".defaultopen");
+const tablinks = document.querySelector(".tab");
+const tabcontent = document.getElementsByClassName("tabcontent");
+const defaultOpen = document.querySelector(".defaultopen");
 
 function init(){
-    let savedTab = getSelectedTabFromStorage();
+    initCountriesTab();
+    initDatesTab();
+    let savedTab = getStringFromStorage(TAB_STORAGE_KEY);
     if (!savedTab || savedTab === defaultOpen.id){
         defaultOpen.style.display = "block";
     }
@@ -18,7 +22,6 @@ function init(){
         let tabLink = document.getElementById(savedTab);
         tabLink.className += " active";
     }
-
 }
 
 function hideAllTabContents(){
@@ -43,17 +46,9 @@ function handleTabLinkClick(evt) {
     showTab(evt.target.id);
     console.log(evt.currentTarget)
     evt.target.className += " active";
-    saveSelectedTabInStorage(evt.target.id)
+    saveStringInStorage(TAB_STORAGE_KEY, evt.target.id)
   }
 
-
-function saveSelectedTabInStorage(name){
-    localStorage.setItem(TAB_STORAGE_KEY, name);
-}
-
-const getSelectedTabFromStorage = () => localStorage.getItem(TAB_STORAGE_KEY);
-
-
-
 tablinks.addEventListener("click", handleTabLinkClick);
+
 init();
